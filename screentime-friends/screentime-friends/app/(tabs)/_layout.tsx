@@ -1,27 +1,35 @@
-// app/(tabs)/index.tsx
-import { View, Text, Button, Alert } from "react-native";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { useAuth } from "@/hooks/useAuth";
+// app/(tabs)/_layout.tsx
+import { Tabs } from "expo-router";
+// If you have your own haptics/icon components, you can re-enable them:
+// import { HapticTab } from "@/components/haptic-tab";
+// import { IconSymbol } from "@/components/ui/icon-symbol";
+// import { Colors } from "@/constants/theme";
+// import { useColorScheme } from "@/hooks/use-color-scheme";
 
-export default function Home() {
-  const { user } = useAuth();
-
-  async function handleLogout() {
-    try {
-      await signOut(auth);
-      // AuthGate will redirect to /auth/login automatically
-    } catch (e: any) {
-      Alert.alert("Logout failed", e?.message ?? String(e));
-    }
-  }
-
+export default function TabsLayout() {
+  // const colorScheme = useColorScheme();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
-      <Text style={{ fontSize: 20, marginBottom: 16 }}>
-        Welcome{user?.email ? `, ${user.email}` : "!"}
-      </Text>
-      <Button title="Log out" onPress={handleLogout} />
-    </View>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        // tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        // tabBarButton: HapticTab, // optional
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          // tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="groups"
+        options={{
+          title: "Groups",
+          // tabBarIcon: ({ color }) => <IconSymbol size={24} name="person.3.fill" color={color} />,
+        }}
+      />
+    </Tabs>
   );
 }
