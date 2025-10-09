@@ -100,18 +100,25 @@ export function listenMessages(groupId: string, cb: (msgs: ChatMessage[]) => voi
   });
 }
 
-export async function sendTextMessage(groupId: string, uid: string, text: string) {
-  const body = text.trim();
-  if (!body) return;
+export async function sendTextMessage(
+  groupId: string,
+  uid: string,
+  text?: string | null,
+  imageUrl?: string | null
+) {
+  if (!text && !imageUrl) return;
+
   await addDoc(collection(db, "groups", groupId, "messages"), {
     senderId: uid,
-    type: "text",
-    text: body,
-    imageUrl: null,
+    type: imageUrl ? "image" : "text",
+    text: text ?? null,
+    imageUrl: imageUrl ?? null,
     createdAt: serverTimestamp(),
     deleted: false,
   });
 }
+
+
 
 export async function softDeleteMessage(groupId: string, messageId: string) {
   // You can implement with updateDoc if you expose it. Kept out for brevity.
